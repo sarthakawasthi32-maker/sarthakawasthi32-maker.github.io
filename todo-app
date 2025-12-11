@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>To-Do List App</title>
+<style>
+  body { font-family: Arial; margin: 20px; }
+  input { padding: 5px; width: 200px; }
+  button { padding: 5px 10px; margin-left: 5px; }
+  ul { list-style-type: none; padding: 0; }
+  li { padding: 5px 0; }
+  .item-buttons button { margin-left: 5px; }
+</style>
+</head>
+<body>
+
+<h1>To-Do List</h1>
+<input type="text" id="new-item" placeholder="Add new item">
+<button onclick="addItem()">Add</button>
+
+<ul id="todo-list"></ul>
+
+<script>
+let todoList = JSON.parse(localStorage.getItem("todoList")) || [];
+
+function renderList() {
+  const list = document.getElementById("todo-list");
+  list.innerHTML = "";
+  todoList.forEach((item, index) => {
+    const li = document.createElement("li");
+    li.textContent = item;
+    
+    const btnDiv = document.createElement("span");
+    btnDiv.className = "item-buttons";
+    
+    // Edit button
+    const editBtn = document.createElement("button");
+    editBtn.textContent = "Edit";
+    editBtn.onclick = () => editItem(index);
+    
+    // Delete button
+    const delBtn = document.createElement("button");
+    delBtn.textContent = "Delete";
+    delBtn.onclick = () => deleteItem(index);
+    
+    btnDiv.appendChild(editBtn);
+    btnDiv.appendChild(delBtn);
+    li.appendChild(btnDiv);
+    
+    list.appendChild(li);
+  });
+}
+
+function addItem() {
+  const input = document.getElementById("new-item");
+  if(input.value.trim() !== "") {
+    todoList.push(input.value.trim());
+    input.value = "";
+    saveList();
+    renderList();
+  }
+}
+
+function editItem(index) {
+  const newVal = prompt("Edit item:", todoList[index]);
+  if(newVal !== null && newVal.trim() !== "") {
+    todoList[index] = newVal.trim();
+    saveList();
+    renderList();
+  }
+}
+
+function deleteItem(index) {
+  todoList.splice(index, 1);
+  saveList();
+  renderList();
+}
+
+function saveList() {
+  localStorage.setItem("todoList", JSON.stringify(todoList));
+}
+
+window.onload = renderList;
+</script>
+
+</body>
+</html>
