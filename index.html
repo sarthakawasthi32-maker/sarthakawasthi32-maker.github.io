@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My jQuery GitHub Page</title>
+    <!-- jQuery CDN -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
+        button { padding: 10px 20px; font-size: 16px; cursor: pointer; }
+        #hidden-text { display: none; color: blue; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h1>Hello, GitHub Pages!</h1>
+    <p>Click the button to see jQuery in action:</p>
+    <button id="show-btn">Show Hidden Text</button>
+    <div id="hidden-text">🎉 You just revealed me using jQuery!</div>
+
+    <script>
+        $(document).ready(function() {
+            $("#show-btn").click(function() {
+                $("#hidden-text").fadeToggle(); // Show/hide with animation
+                console.log("Button clicked!"); // Debug in console
+            });
+        });
+    </script>
+</body>
+</html>
