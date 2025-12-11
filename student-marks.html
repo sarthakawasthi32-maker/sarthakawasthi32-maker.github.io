@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student Marks Entry & Performance</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; margin-top: 20px; }
+    input, button { padding: 5px; margin: 5px; }
+    #chart { margin-top: 30px; }
+  </style>
+</head>
+<body>
+  <h1>Student Marks Entry</h1>
+  <form id="marks-form">
+    <input type="text" id="student-name" placeholder="Student Name" required>
+    <input type="number" id="marks" placeholder="Marks" min="0" max="100" required>
+    <button type="submit">Add Marks</button>
+  </form>
+
+  <h2>Performance Visualization</h2>
+  <div id="chart"></div>
+
+  <script>
+    const form = document.getElementById("marks-form");
+    const chartDiv = d3.select("#chart");
+    let data = [];
+
+    form.addEventListener("submit", function(e) {
+      e.preventDefault();
+      const name = document.getElementById("student-name").value;
+      const marks = +document.getElementById("marks").value;
+      data.push({ name, marks });
+      updateChart();
+      form.reset();
+    });
+
+    function updateChart() {
+      chartDiv.selectAll("*").remove();
+      const width = 500, height = 300;
+      const svg = chartDiv.append("svg")
+        .attr("width", width)
+        .attr("height", height);
+      
+      const x = d3.scaleBand()
+        .domain(data.map(d => d.name))
+        .range([0, width])
+        .padding(0.2);
+      
+      const y = d3.scaleLinear()
+        .domain([0, 100])
+        .range([height, 0]);
+      
+      svg.selectAll("rect")
+        .data(data)
+        .enter()
+        .append("rect")
+          .attr("x", d => x(d.name))
+          .attr("y", d => y(d.marks))
+          .attr("width", x.bandwidth())
+          .attr("height", d => height - y(d.marks))
+          .attr("fill", "steelblue");
+      
+      svg.append("g")
+        .attr("transform", `translate(0,${height})`)
+        .call(d3.axisBottom(x));
+      
+      svg.append("g")
+        .call(d3.axisLeft(y));
+    }
+  </script>
+</body>
+</html>
